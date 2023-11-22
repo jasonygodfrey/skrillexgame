@@ -1,11 +1,36 @@
-//Level.js
+class Particle {
+    constructor(scene, x, y) {
+        this.scene = scene;
+        this.x = x;
+        this.y = y;
+        this.lifespan = 2000; // lifespan in milliseconds
+        this.velocity = { x: Phaser.Math.Between(-100, 100), y: Phaser.Math.Between(-100, 100) };
+        this.startTime = Date.now();
+    }
 
+    update() {
+        let timeElapsed = Date.now() - this.startTime;
+        if (timeElapsed > this.lifespan) {
+            return false;
+        }
+
+        this.x += this.velocity.x * this.scene.game.loop.delta / 1000;
+        this.y += this.velocity.y * this.scene.game.loop.delta / 1000;
+        return true;
+    }
+
+    draw(graphics) {
+        graphics.fillStyle(0x00ff00, 1);
+        graphics.fillCircle(this.x, this.y, 5); // Render particle as a small green circle
+    }
+}
 class Level extends Phaser.Scene {
-
-	constructor() {
-		super("Level");
-		this.music = null;
-	}
+    constructor() {
+        super("Level");
+        this.music = null;
+        this.particles = [];
+        this.graphics = null;
+    }
 
 	editorCreate() {
 		this.music = this.sound.add("music", { loop: true });
@@ -79,6 +104,7 @@ class Level extends Phaser.Scene {
 
 	create() {
 		this.editorCreate();
+        this.graphics = this.add.graphics();
 
 		this.input.setDefaultCursor('url(assets/starcursor.png), pointer');
 
@@ -131,7 +157,32 @@ class Level extends Phaser.Scene {
 			window.open('https://jasongodfrey.dev', '_blank');
 		});
 
-		
+
+        // Set up a timer event for particle spawning
+        // Set up a timer event for particle spawning
+        this.time.addEvent({
+            delay: 200,
+            callback: () => {
+                this.spawnParticle(this.scale.width / 2, this.scale.height / 2);
+            },
+            loop: true
+        });
+    }
+
+    spawnParticle(x, y) {
+        this.particles.push(new Particle(this, x, y));
+    }
+
+    update() {
+        this.graphics.clear();
+        this.particles = this.particles.filter(particle => {
+            let alive = particle.update();
+            if (alive) {
+                particle.draw(this.graphics);
+            }
+            return alive;
+        });
+
 	}
 	
 }
