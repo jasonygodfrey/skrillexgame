@@ -14,7 +14,10 @@ class GameScene extends Phaser.Scene {
         // Flag to track game over state
         this.isGameOver = false;
 
-        // Write your code here.
+        // New properties for rhythm game
+        this.beatTimer = 0; // Timer to track beats
+        this.beatInterval = 1000; // Interval between beats in milliseconds (e.g., 1000ms for a beat every second)
+
         /* END-USER-CTR-CODE */
     }
 
@@ -78,25 +81,25 @@ class GameScene extends Phaser.Scene {
 
     destroyEnemy(projectile, enemy) {
         // This function is called whenever a projectile overlaps with an enemy
-      
+
         // Remove the enemy
         enemy.destroy();
-      
+
         // Remove the projectile
         projectile.destroy();
-      
+
         // Check the number of remaining enemies
         const remainingEnemies = this.enemies.getChildren().length;
         if (remainingEnemies === 0) {
             this.sound.stopAll(); // Stop all currently playing sounds
 
             this.scene.start("GameScene2");
-            
 
-         
+
+
         }
-      }
-      
+    }
+
 
     /** @returns {void} */
     editorCreate() {
@@ -118,7 +121,7 @@ class GameScene extends Phaser.Scene {
         music.play();
         this.events.emit("scene-awake");
 
-        
+
     }
 
 
@@ -143,9 +146,9 @@ class GameScene extends Phaser.Scene {
 
         this.cameras.main.setBackgroundColor('#000000');
 
-    // Create the right arrow image
-    const rightArrow = this.add.image(700, 500, 'rightarrow');
-    rightArrow.setInteractive();
+        // Create the right arrow image
+        const rightArrow = this.add.image(700, 500, 'rightarrow');
+        rightArrow.setInteractive();
 
 
         // Create the enemy projectiles group with physics
@@ -342,11 +345,11 @@ class GameScene extends Phaser.Scene {
                     // Stop all ongoing tweens and physics
                     this.physics.pause();
                     //this.tweens.pauseAll();
-                    
+
                     menuButtonImage.on("pointerup", () => {
                         this.playerHealth = 10;
                         this.sound.stopAll(); // Stop all currently playing sounds
-                    
+
                         // Create a bounce animation for the button
                         this.tweens.add({
                             targets: menuButtonImage,
@@ -355,14 +358,14 @@ class GameScene extends Phaser.Scene {
                             yoyo: true,
                             repeat: 1
                         });
-                    
+
                         // Start the "Level" scene after the bounce animation is complete
                         this.time.delayedCall(200, () => {
                             this.isGameOver = false;
                             this.scene.start("Level");
                         });
                     });
-                    
+
 
 
 
@@ -398,6 +401,31 @@ class GameScene extends Phaser.Scene {
             }
         }, null, this);
 
+        // Create the developer restart button
+        this.devRestartButton = this.add.text(
+            this.sys.game.config.width - 30,
+            this.sys.game.config.height - 30,
+            '<<',
+            {
+                fontFamily: 'Arial',
+                fontSize: '32px',
+                fill: '#ffffff'
+            }
+        ).setOrigin(1, 1).setInteractive();
+
+        // Add a click event listener to the button
+        this.devRestartButton.on('pointerdown', () => {
+            this.sound.stopAll(); // Stop all currently playing sounds
+
+            this.scene.restart(); // Restart the current scene
+        });
+        this.devRestartButton.setPosition(
+            this.sys.game.config.width - 30,
+            this.sys.game.config.height - 30
+        );
+        this.devRestartButton.setStyle({ backgroundColor: '#000000', padding: 5 });
+        this.devRestartButton.on('pointerover', () => this.devRestartButton.setStyle({ fill: '#ff0000' }));
+        this.devRestartButton.on('pointerout', () => this.devRestartButton.setStyle({ fill: '#ffffff' }));
 
 
 
@@ -407,13 +435,19 @@ class GameScene extends Phaser.Scene {
 
 
 
-    update() {
+    update(time, delta) {
+        // Update the beat timer
+        this.beatTimer += delta;
+        if (this.beatTimer >= this.beatInterval) {
+            this.spawnBeat();
+            this.beatTimer -= this.beatInterval;
+        }
         // Update the position of the exhaust to follow the player ship
         this.playerExhaust.x = this.player.x;
         this.playerExhaust.y = this.player.y + 110;
 
         // Scroll the background slower
-      //  this.background.tilePositionY -= 0.6;
+        //  this.background.tilePositionY -= 0.6;
 
         // Reset the playerHit flag in each update frame
         this.playerHit = false;
@@ -484,6 +518,11 @@ class GameScene extends Phaser.Scene {
                 collider.collideCallback(collider.bodyA === this.player.body ? collider.bodyB.gameObject : collider.bodyA.gameObject);
             }
         });
+    }
+    spawnBeat() {
+        // Example of spawning a simple beat
+        let beat = this.add.circle(100, 100, 20, 0xffffff);
+        // Add more properties or animations to the beat as needed
     }
 
 
