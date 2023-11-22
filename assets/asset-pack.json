@@ -1,0 +1,133 @@
+{
+  "section1": {
+      "files": [
+          {
+              "url": "assets/dino.png",
+              "key": "dino",
+              "type": "image"
+          },
+          {
+            "url": "assets/menubutton.png",
+            "key": "menubutton",
+            "type": "image"
+        },
+        {
+            "url": "assets/enemy2.png",
+            "key": "enemy2",
+            "type": "image"
+        },
+          {
+            "url": "assets/gameover.png",
+            "key": "gameover",
+            "type": "image"
+        },
+          {
+              "url": "assets/playbutton.png",
+              "key": "playbutton",
+              "type": "image"
+          },
+          {
+            "url": "assets/youwin.png",
+            "key": "youwin",
+            "type": "image"
+        },
+        {
+          "url": "assets/winbackground.png",
+          "key": "winbackground",
+          "type": "image"
+      },
+          {
+            "url": "assets/boss1.png",
+            "key": "boss1",
+            "type": "image"
+        },
+          {
+            "url": "assets/bosstile.png",
+            "key": "bosstile",
+            "type": "image"
+        },
+          {
+            "url": "assets/enemy1.png",
+            "key": "enemy1",
+            "type": "image"
+        },
+          {
+              "url": "assets/pinkstars1.png",
+              "key": "pinkstars1",
+              "type": "image"
+          },
+          {
+              "url": "assets/boba1.png",
+              "key": "boba1",
+              "type": "image"
+          },
+          {
+              "url": "assets/ship1.png",
+              "key": "ship1",
+              "type": "image"
+          },
+          {
+              "url": "assets/background2.png",
+              "key": "background2",
+              "type": "image"
+          },
+          {
+              "url": "assets/background.png",
+              "key": "background",
+              "type": "image"
+          },
+          {
+            "url": "assets/purplejelly.png",
+            "key": "purplejelly",
+            "type": "image"
+        },
+        {
+            "url": "assets/starcursor.png",
+            "key": "starcursor",
+            "type": "image"
+        },
+          {
+              "url": "assets/redlightspellsdanger.mp3",
+              "key": "music",
+              "type": "audio"
+          },
+          
+          {
+              "url": "assets/queen.mp3",
+              "key": "queen",
+              "type": "audio"
+          },
+          {
+            "url": "assets/car.mp3",
+            "key": "car",
+            "type": "audio"
+        },
+          {
+            "url": "assets/bossmusic1.mp3",
+            "key": "bossmusic1",
+            "type": "audio"
+        },
+          {
+              "url": "assets/fonts/Galaxy1Italic-MeDp.ttf",
+              "key": "customFont",
+              "type": "font"
+          },
+          {
+            "url": "assets/sparkle1spritesheet.png",
+            "key": "sparkle1",
+            "type": "spritesheet",
+            "frameConfig": {
+                "frameWidth": 33.2,
+                "frameHeight": 60
+            }
+        }
+        
+      ]
+  },
+  "meta": {
+      "app": "Phaser Editor 2D - Asset Pack Editor",
+      "contentType": "phasereditor2d.pack.core.AssetContentType",
+      "url": "https://phasereditor2d.com",
+      "version": 2
+  }
+}
