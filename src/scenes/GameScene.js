@@ -53,7 +53,7 @@ class GameScene extends Phaser.Scene {
         }
         // Create the projectile
         let projectile = this.physics.add.sprite(this.player.x, this.player.y - 50, 'boba1');
-        projectile.setScale(0.2); // Adjust the scale of the projectile if necessary
+        projectile.setScale(0.0); // Adjust the scale of the projectile if necessary
 
         // Set the speed of the projectile
         let projectileSpeed = 190;
@@ -100,6 +100,7 @@ class GameScene extends Phaser.Scene {
 
     /** @returns {void} */
     editorCreate() {
+        /*
         // Load the background image
         // Create the "pinkstars1" tileSprite
         const gameWidth = this.sys.game.config.width;
@@ -111,7 +112,7 @@ class GameScene extends Phaser.Scene {
         const scaleRatioY = gameHeight / 1800;
         const scaleMultiplier = 2; // Adjust the value to increase or decrease the scale
         this.background.setScale(scaleRatioX * scaleMultiplier, scaleRatioY * scaleMultiplier);
-
+*/
         // Load the audio
         const music = this.sound.add("queen", { loop: true });
         music.play();
@@ -140,7 +141,11 @@ class GameScene extends Phaser.Scene {
 
         this.input.setDefaultCursor('none');
 
+        this.cameras.main.setBackgroundColor('#000000');
 
+    // Create the right arrow image
+    const rightArrow = this.add.image(700, 500, 'rightarrow');
+    rightArrow.setInteractive();
 
 
         // Create the enemy projectiles group with physics
@@ -158,7 +163,7 @@ class GameScene extends Phaser.Scene {
 
         // Create the player spaceship
         this.player = this.add.sprite(640, 600, 'ship1');
-        this.player.setScale(0.5); // Adjust the scale to make it smaller
+        this.player.setScale(0.9); // Adjust the scale to make it smaller
 
         // Enable physics for the player sprite
         this.physics.world.enable(this.player);
@@ -166,7 +171,7 @@ class GameScene extends Phaser.Scene {
         // Add the sparkle animation as the 'exhaust' of the player ship
         this.playerExhaust = this.add.sprite(this.player.x, this.player.y + 90, 'sparkle1');
         this.playerExhaust.play('sparkle');
-        this.playerExhaust.setScale(2, 2); // Adjust the scale to make the height smaller
+        this.playerExhaust.setScale(0, 0); // Adjust the scale to make the height smaller
 
 
         // Set the depth of the playerExhaust to be less than the player
@@ -238,8 +243,8 @@ class GameScene extends Phaser.Scene {
         // Create the enemy group with physics
         this.enemies = this.physics.add.group();
 
-        // Add 10 enemy sprites to the group
-        for (let i = 0; i < 10; i++) {
+        // Add 0!@!@!@!@!@ enemy sprites to the group
+        for (let i = 0; i < 0; i++) {
             const enemy = this.add.sprite(
                 Phaser.Math.Between(0, this.sys.game.config.width),
                 Phaser.Math.Between(-500, -100),
@@ -408,7 +413,7 @@ class GameScene extends Phaser.Scene {
         this.playerExhaust.y = this.player.y + 110;
 
         // Scroll the background slower
-        this.background.tilePositionY -= 0.6;
+      //  this.background.tilePositionY -= 0.6;
 
         // Reset the playerHit flag in each update frame
         this.playerHit = false;

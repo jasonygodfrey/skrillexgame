@@ -12,6 +12,11 @@
             "type": "image"
         },
         {
+          "url": "assets/rightarrow.png",
+          "key": "rightarrow",
+          "type": "image"
+      },
+        {
             "url": "assets/enemy2.png",
             "key": "enemy2",
             "type": "image"
