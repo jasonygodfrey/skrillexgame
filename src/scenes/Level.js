@@ -1,29 +1,66 @@
 class Particle {
     constructor(scene, x, y) {
+        // Basic properties
         this.scene = scene;
         this.x = x;
         this.y = y;
-        this.lifespan = 2000; // lifespan in milliseconds
+        this.size = 50; // Size of the square
+        this.lifespan = Phaser.Math.Between(12000, 19000); // Lifespan in milliseconds, varies between 9-15 seconds
         this.velocity = { x: Phaser.Math.Between(-100, 100), y: Phaser.Math.Between(-100, 100) };
         this.startTime = Date.now();
+        this.color = this.getRandomColor();
+
+        // Properties for glitch effect
+        this.glitchThreshold = 0.0; // Chance of glitch happening in each update
+        this.maxGlitchOffset = 5; // Maximum pixel offset for the glitch
+        this.maxGlitchSizeIncrease = 10; // Maximum increase in size for the glitch
+    }
+
+    getRandomColor() {
+        // Generate a Phaser Display Color with random green values
+        let brightness = Phaser.Math.Between(50, 255);
+        return Phaser.Display.Color.GetColor(0, brightness, 0);
     }
 
     update() {
+        // Update lifespan
         let timeElapsed = Date.now() - this.startTime;
         if (timeElapsed > this.lifespan) {
             return false;
         }
 
+        // Update position
         this.x += this.velocity.x * this.scene.game.loop.delta / 1000;
         this.y += this.velocity.y * this.scene.game.loop.delta / 1000;
+
+        // Randomly apply glitch effect
+        if (Phaser.Math.FloatBetween(0, 1) < this.glitchThreshold) {
+            this.applyGlitch();
+        }
+
         return true;
     }
 
+    applyGlitch() {
+        // Randomly adjust position and size for the glitch effect
+        let glitchOffsetX = Phaser.Math.Between(-this.maxGlitchOffset, this.maxGlitchOffset);
+        let glitchOffsetY = Phaser.Math.Between(-this.maxGlitchOffset, this.maxGlitchOffset);
+        let glitchSizeIncrease = Phaser.Math.Between(0, this.maxGlitchSizeIncrease);
+
+        this.x += glitchOffsetX;
+        this.y += glitchOffsetY;
+        this.glitchSize = this.size + glitchSizeIncrease;
+    }
+
     draw(graphics) {
-        graphics.fillStyle(0x00ff00, 1);
-        graphics.fillCircle(this.x, this.y, 5); // Render particle as a small green circle
+        // Draw particle with current size and color
+        graphics.fillStyle(this.color, 1);
+        const size = this.glitchSize || this.size; // Use glitch size if available, else default size
+        graphics.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+        this.glitchSize = null; // Reset glitch size after drawing
     }
 }
+
 class Level extends Phaser.Scene {
     constructor() {
         super("Level");
@@ -77,7 +114,7 @@ class Level extends Phaser.Scene {
 		const playButton = this.add.image(gameWidth / 2, gameHeight / 2 , "playbutton");
 		playButton.setInteractive();
 		playButton.setScale(0.8);
-
+		playButton.setDepth(1); // Set the depth to a higher value
 		playButton.isTweening = false;
 
 		playButton.on("pointerup", () => {
@@ -161,7 +198,7 @@ class Level extends Phaser.Scene {
         // Set up a timer event for particle spawning
         // Set up a timer event for particle spawning
         this.time.addEvent({
-            delay: 200,
+            delay: 100,
             callback: () => {
                 this.spawnParticle(this.scale.width / 2, this.scale.height / 2);
             },
