@@ -1,3 +1,4 @@
+
 //GameScene.js
 class GameScene extends Phaser.Scene {
 
@@ -17,10 +18,66 @@ class GameScene extends Phaser.Scene {
         // New properties for rhythm game
         this.beatTimer = 0; // Timer to track beats
         this.beatInterval = 1000; // Interval between beats in milliseconds (e.g., 1000ms for a beat every second)
-
+                // New property for arrow
+                this.arrow = null;
         /* END-USER-CTR-CODE */
     }
+    handleBeatEvent() {
+        if (this.isGameOver) {
+            return; // Do not handle beats if the game is over
+        }
 
+        // Check if there are more beats in the beatmap
+        if (this.currentBeatIndex < this.beatmapData.length) {
+            const beatData = this.beatmapData[this.currentBeatIndex];
+
+            // Extract relevant properties from the beatData
+            const beatType = beatData["1"]; // Assuming "1" represents beat type
+            const beatDuration = beatData["0.278500000"]; // Assuming "0.278500000" represents beat duration
+
+            // Perform actions based on the extracted data
+            switch (beatType) {
+                case 1:
+                    // Handle beat type 1 (e.g., shoot projectiles)
+                    this.shootProjectile();
+                    break;
+                case 2:
+                    // Handle beat type 2 (e.g., spawn enemies)
+                    this.spawnEnemy();
+                    break;
+                case 3:
+                    // Handle beat type 3 (e.g., do something with the arrow)
+                    this.handleArrowBeat();
+                    break;
+                // Add more cases as needed for different beat types
+            }
+
+            // Increment the beat index for the next beat
+            this.currentBeatIndex++;
+        } else {
+            // All beats have been processed, you can stop the timer or implement a game end logic
+            this.beatTimer.remove(false); // Remove the timer without stopping it
+            // Implement game end logic here if needed
+        }
+    }
+
+    handleArrowBeat() {
+        // Implement what you want to do with the arrow when a beat of type 3 occurs
+        // For example, move the arrow or change its appearance
+        if (this.arrow) {
+            // Move the arrow to a new random position
+            const newX = Phaser.Math.Between(100, 700); // Adjust the range as needed
+            const newY = Phaser.Math.Between(100, 500); // Adjust the range as needed
+            this.arrow.setPosition(newX, newY);
+
+            // Change the arrow's tint/color
+            const newColor = Phaser.Display.Color.RandomRGB();
+            this.arrow.setTint(newColor);
+        } else {
+            // Create the arrow if it doesn't exist
+            this.arrow = this.add.image(100, 100, 'arrow'); // Adjust the initial position and image key
+        }
+    }
     shootProjectileFromEnemy(enemy) {
         // Create the enemy projectile
         const projectile = this.physics.add.sprite(enemy.x, enemy.y + 50, 'purplejelly');
@@ -519,11 +576,24 @@ class GameScene extends Phaser.Scene {
             }
         });
     }
-    spawnBeat() {
-        // Example of spawning a simple beat
-        let beat = this.add.circle(100, 100, 20, 0xffffff);
-        // Add more properties or animations to the beat as needed
-    }
+ // Add the spawnBeat function here
+ spawnBeat() {
+    // Example of spawning a simple beat
+    let beat = this.add.circle(Phaser.Math.Between(100, 700), Phaser.Math.Between(100, 500), 20, 0xffffff);
+
+    // Add an animation to the beat (e.g., pulsing or scaling)
+    this.tweens.add({
+        targets: beat,
+        duration: 200, // Adjust the duration as needed
+        scaleX: 3.2,   // Scale up in X direction
+        scaleY: 3.2,   // Scale up in Y direction
+        alpha: 0,      // Fade out
+        onComplete: () => {
+            // Remove the beat when the animation is complete
+            beat.destroy();
+        }
+    });
+}
 
 
 
